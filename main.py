@@ -6,6 +6,9 @@ class Point:
         self.x = x
         self.y = y
 
+#TODO: сдвиг фигуры
+#TODO: круг
+#TODO: посмотреть другие алгоритмы
 
 class Polygon:
     def __init__(self, *points):
@@ -20,15 +23,16 @@ class Polygon:
 
         for i in range(0, len(self.points) - 1):
             for j in range(0, len(poly2.points) - 1):
-                if self.__intersect__(self.points[i], self.points[i + 1], poly2.points[j], poly2.points[j + 1]):
+                if self.intersect(self.points[i], self.points[i + 1], poly2.points[j], poly2.points[j + 1]):
                     f = True
                     break
         return f
 
-    def __intersect__(self, A, B, C, D):
-        def ccw(A, B, C):
-            return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x)
-        return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
+    def intersect(self, a, b, c, d):
+        def ccw(a, b, c):
+            return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x)
+
+        return ccw(a, c, d) != ccw(b, c, d) and ccw(a, b, c) != ccw(a, b, d)
 
     def plotPolygon(self, color='blue'):
         x_values = [point.x for point in self.points]
