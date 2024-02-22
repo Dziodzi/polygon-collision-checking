@@ -17,14 +17,14 @@ class Polygon:
             self.points.append(point)
 
     def getMaxX(self):
-        cur_max = -9223372036854775806
+        cur_max = -math.inf
         for point in self.points:
             if point.x > cur_max:
                 cur_max = point.x
         return cur_max
 
     def getMaxY(self):
-        cur_max = -9223372036854775806
+        cur_max = -math.inf
 
         for point in self.points:
             if point.y > cur_max:
@@ -32,14 +32,14 @@ class Polygon:
         return cur_max
 
     def getMinX(self):
-        cur_min = 9223372036854775807
+        cur_min = math.inf
         for point in self.points:
             if point.x < cur_min:
                 cur_min = point.x
         return cur_min
 
     def getMinY(self):
-        cur_min = 9223372036854775807
+        cur_min = math.inf
         for point in self.points:
             if point.y < cur_min:
                 cur_min = point.y
