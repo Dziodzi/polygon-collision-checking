@@ -34,7 +34,7 @@ class Polygon:
             return True
         return False
 
-    def checkCollision(self, poly2):
+    def check_collision(self, poly2):
         f = False
 
         self.points.append(copy(self.points[0]))
@@ -73,14 +73,14 @@ class Polygon:
             point.y += y
 
     def get_max_x(self):
-        cur_max = -9223372036854775806
+        cur_max = -math.inf
         for point in self.points:
             if point.x > cur_max:
                 cur_max = point.x
         return cur_max
 
     def get_max_y(self):
-        cur_max = -9223372036854775806
+        cur_max = -math.inf
 
         for point in self.points:
             if point.y > cur_max:
@@ -88,14 +88,14 @@ class Polygon:
         return cur_max
 
     def get_min_x(self):
-        cur_min = 9223372036854775807
+        cur_min = math.inf
         for point in self.points:
             if point.x < cur_min:
                 cur_min = point.x
         return cur_min
 
     def get_min_y(self):
-        cur_min = 9223372036854775807
+        cur_min = math.inf
         for point in self.points:
             if point.y < cur_min:
                 cur_min = point.y
@@ -138,7 +138,7 @@ seconds_start = time.time()
 
 for i in range(0, len(polygonList) - 1):
     for j in range(i + 1, len(polygonList)):
-        if polygonList[i].checkCollision(polygonList[j]):
+        if polygonList[i].check_collision(polygonList[j]):
             #     print("многоугольники пересекаются")
             pass
         else:
@@ -153,7 +153,7 @@ for i in range(0, len(polygonList) - 1):
     # seconds_for_waiting += step
 
 total_time = time.time() - seconds_start
-count_pairs = int((len(polygonList) * (len(polygonList) + 1)) / 2)
+count_pairs = int((len(polygonList) * (len(polygonList) - 1)) / 2)
 
 print("Программа обработала", count_pairs, "пар полигонов за", round(total_time, 4)
       , "секунд.")

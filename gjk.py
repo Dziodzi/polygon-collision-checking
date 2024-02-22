@@ -15,14 +15,14 @@ class Polygon:
         for point in points:
             self.points.append(point)
 
-    def getMaxX(self):
+    def get_max_x(self):
         cur_max = -math.inf
         for point in self.points:
             if point.x > cur_max:
                 cur_max = point.x
         return cur_max
 
-    def getMaxY(self):
+    def get_max_y(self):
         cur_max = -math.inf
 
         for point in self.points:
@@ -30,14 +30,14 @@ class Polygon:
                 cur_max = point.y
         return cur_max
 
-    def getMinX(self):
+    def get_min_x(self):
         cur_min = math.inf
         for point in self.points:
             if point.x < cur_min:
                 cur_min = point.x
         return cur_min
 
-    def getMinY(self):
+    def get_min_y(self):
         cur_min = math.inf
         for point in self.points:
             if point.y < cur_min:
@@ -46,12 +46,12 @@ class Polygon:
 
     """Проверка боксов на несоприкосновение"""
 
-    def checkBoxesCollision(self, box):
-        if self.getMinX() <= box.getMinX() <= self.getMaxX() or self.getMinX() <= box.getMaxX() <= self.getMaxX():
-            if self.getMinY() <= box.getMinY() <= self.getMaxY() or self.getMinY() <= box.getMaxY() <= self.getMaxY():
+    def check_boxes_collision(self, box):
+        if self.get_min_x() <= box.get_min_x() <= self.get_max_x() or self.get_min_x() <= box.get_max_x() <= self.get_max_x():
+            if self.get_min_y() <= box.get_min_y() <= self.get_max_y() or self.get_min_y() <= box.get_max_y() <= self.get_max_y():
                 return True
-        elif box.getMinX() <= self.getMinX() <= box.getMaxX() or box.getMinX() <= self.getMaxX() <= box.getMaxX():
-            if box.getMinY() <= self.getMinY() <= box.getMaxY() or box.getMinY() <= self.getMaxY() <= box.getMaxY():
+        elif box.get_min_x() <= self.get_min_x() <= box.get_max_x() or box.get_min_x() <= self.get_max_x() <= box.get_max_x():
+            if box.get_min_y() <= self.get_min_y() <= box.get_max_y() or box.get_min_y() <= self.get_max_y() <= box.get_max_y():
                 return True
         return False
 
@@ -102,7 +102,7 @@ def subtract_points(point1, point2):
 
 def gjk(poly1, poly2):
     """Первичная проверка - если боксы не соприкасаются, то gjk можно не прогонять"""
-    if not poly1.checkBoxesCollision(poly2):
+    if not poly1.check_boxes_collision(poly2):
         return False
 
     direction = Point(1, 0)
@@ -229,7 +229,7 @@ if __name__ == "__main__":
                 pass
 
     total_time = time.time() - seconds_start
-    count_pairs = int((len(polygonList) * (len(polygonList) + 1)) / 2)
+    count_pairs = int((len(polygonList) * (len(polygonList) - 1)) / 2)
 
     print("Программа обработала", count_pairs, "пар полигонов за", round(total_time, 4)
           , "секунд.")
