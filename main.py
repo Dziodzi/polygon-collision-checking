@@ -11,22 +11,29 @@ class Point:
         self.y = y
 
 
-# TODO: лежит ли внутри фигуры
-# Проверка: если для любой вершины данной фигуры окажется, что есть вершины другой фигуры левее, правее, выше и ниже, но фигуры пересекаются
-# TODO: посмотреть другие алгоритмы
-# GJK
-# TODO: статистика
-
 class Polygon:
     def __init__(self, *points):
         self.points = []
         for point in points:
             self.points.append(point)
 
-    def checkBoxesCollision(self, box):
-        if self.getMinX() < box.getMinX() < self.getMaxX() or (box.getMinX() < self.getMinX() < box.getMaxX()):
-            if self.getMinY() < box.getMinY() < self.getMaxY() or (box.getMinY() < self.getMinY() < box.getMaxY()):
+    def check_boxes_collision(self, box):
+        if self.get_min_x() <= box.get_min_x() <= self.get_max_x() or self.get_min_x() <= box.get_max_x() <= self.get_max_x():
+            if self.get_min_y() <= box.get_min_y() <= self.get_max_y() or self.get_min_y() <= box.get_max_y() <= self.get_max_y():
                 return True
+        elif box.get_min_x() <= self.get_min_x() <= box.get_max_x() or box.get_min_x() <= self.get_max_x() <= box.get_max_x():
+            if box.get_min_y() <= self.get_min_y() <= box.get_max_y() or box.get_min_y() <= self.get_max_y() <= box.get_max_y():
+                return True
+        return False
+
+    def check_boxes_borders(self, box):
+        i = 0
+        if self.get_min_x() == box.get_min_x(): i += 1
+        if self.get_max_x() == box.get_max_x(): i += 1
+        if self.get_max_y() == box.get_max_y(): i += 1
+        if self.get_min_y() == box.get_min_y(): i += 1
+        if i >= 3:
+            return True
         return False
 
     def checkCollision(self, poly2):
@@ -35,9 +42,10 @@ class Polygon:
         self.points.append(copy(self.points[0]))
         poly2.points.append(copy(poly2.points[0]))
 
-        if not self.checkBoxesCollision(poly2):
-            #print("Боксы пересеклись, а значит")
+        if not self.check_boxes_collision(poly2):
             return False
+        if self.check_boxes_borders(poly2):
+            return True
 
         for i in range(0, len(self.points) - 1):
             for j in range(0, len(poly2.points) - 1):
@@ -66,14 +74,14 @@ class Polygon:
             point.x += x
             point.y += y
 
-    def getMaxX(self):
+    def get_max_x(self):
         cur_max = -9223372036854775806
         for point in self.points:
             if point.x > cur_max:
                 cur_max = point.x
         return cur_max
 
-    def getMaxY(self):
+    def get_max_y(self):
         cur_max = -9223372036854775806
 
         for point in self.points:
@@ -81,14 +89,14 @@ class Polygon:
                 cur_max = point.y
         return cur_max
 
-    def getMinX(self):
+    def get_min_x(self):
         cur_min = 9223372036854775807
         for point in self.points:
             if point.x < cur_min:
                 cur_min = point.x
         return cur_min
 
-    def getMinY(self):
+    def get_min_y(self):
         cur_min = 9223372036854775807
         for point in self.points:
             if point.y < cur_min:
@@ -114,14 +122,17 @@ class Circle(Polygon):
 
 polygonList = []
 
-for i in range(0, 5):
-    polygonList.append(Polygon(Point(1, i), Point(2, i + 1), Point(1, i + 2)))
-    polygonList.append(Polygon(Point(i + 2, 1), Point(i + 1, 3), Point(i + 2, 2)))
-    polygonList.append(Polygon(Point(i + 1, 2), Point(2, i + 3), Point(7, i + 5)))
-    polygonList.append(Polygon(Point(1, i), Point(2, i + 1), Point(1, i + 2), Point(3, i + 2), Point(i + 3, 3)))
-    polygonList.append(Circle(1, i, 2))
-    polygonList.append(Circle(1, i, 3))
-    polygonList.append(Circle(1, i, 4))
+for i in range(0, 20):
+    polygonList.append(Circle(i, 1, 1))
+    polygonList.append(Circle(i, 1, 5))
+    polygonList.append(Circle(i, 1, 1))
+    polygonList.append(Circle(i + 0.5, 1.5, 1))
+    polygonList.append(Circle(i + 3, 4, 1))
+    polygonList.append(Polygon(Point(i, 1), Point(1, 2), Point(2, 2)))
+    polygonList.append(Polygon(Point(i, 1), Point(1, 2), Point(2, 2)))
+    polygonList.append(Polygon(Point(i + 2, 3), Point(3, 4), Point(4, 4)))
+    polygonList.append(Polygon(Point(i + 3, 5), Point(13, 14), Point(14, 14)))
+    polygonList.append(Polygon(Point(i + 4, 10), Point(11, 15), Point(15, 15)))
 
 seconds_start = time.time()
 # seconds_for_waiting = 0
@@ -130,18 +141,21 @@ seconds_start = time.time()
 for i in range(0, len(polygonList) - 1):
     for j in range(i + 1, len(polygonList)):
         if polygonList[i].checkCollision(polygonList[j]):
-       #     print("многоугольники пересекаются")
+            #     print("многоугольники пересекаются")
             pass
         else:
             pass
-           # print("ОПА! Многоугольники не пересекаются")
-       # print("-=-=-=-=-=-=-=-")
-        # polygonList[i].plotPolygon()
-        # polygonList[j].plotPolygon(color='red')
-        # plt.axis('equal')
-        # plt.show()
-        # time.sleep(step)
-        # seconds_for_waiting += step
+        # print("ОПА! Многоугольники не пересекаются")
+    # print("-=-=-=-=-=-=-=-")
+    # polygonList[i].plotPolygon()
+    # polygonList[j].plotPolygon(color='red')
+    # plt.axis('equal')
+    # plt.show()
+    # time.sleep(step)
+    # seconds_for_waiting += step
 
-print("Программа обработала все пары", len(polygonList), "полигонов за",
-      time.time() - seconds_start, "секунд.")
+total_time = time.time() - seconds_start
+count_pairs = int((len(polygonList) * (len(polygonList) + 1)) / 2)
+
+print("Программа обработала", count_pairs, "пар полигонов за", round(total_time, 4)
+      , "секунд.")
